@@ -1,85 +1,115 @@
-//Pacote Principal
-package leitorTexto;
-
-//Importações necessárias
+//ImportaÃ§Ãµes necessÃ¡rias
 import java.io.*;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.image.BufferedImage;
+
 import javax.imageio.ImageIO;
 
 //Classe LeitorTexto
-public class leitorTexto {	
-	
-	//Método principal
-	public static void main(String[] args) {
-		
-		//Entredas de largura e comprimento para a criação da imagem
-		int largura = Integer.parseInt(JOptionPane.showInputDialog("Qual é a largura da imagem?"));
-		int comprimento = Integer.parseInt(JOptionPane.showInputDialog("Qual é o comprimento da imagem?"));
-		
-		//Imagem em buffer até a composição final
-		BufferedImage img = new BufferedImage(comprimento, largura, BufferedImage.TYPE_INT_RGB);
-	
-		//Entrada do nome do arquivo texto para a formação a partir deste
-		String nomeArquivo = JOptionPane.showInputDialog("Escreva o nome do arquivo");
-		
-		//String para o caminho da imagem
-		String nomeCompleto = "C:\\Users\\eduar\\Desktop\\" + nomeArquivo + ".txt";
-		
-		//Linha para a formação da imagem atraves da leitura da mesma
-		String linha = null;
-		
-		try {
-			
-			//Cria um leitor para o arquivo texto
-			FileReader arquivo = new FileReader(nomeCompleto);
-			
-			//Cria um buffer para a entrada de valores do arquivo texto para o programa
-			BufferedReader texto = new BufferedReader(arquivo);
-			
-			//Enquanto a linha do texto for diferente de nulo 
-			while((linha = texto.readLine()) != null) {
-				
-				//Separe as strings das linhas a partir de um espaço " "
-				String[] textoSplit = linha.split(" ");
-				
-				//Pega, no primeiro espaço da linha a posição X
-				int posicaoX = Integer.parseInt(textoSplit[0]);
-				//Pega, no segundo espaço da linha a posição Y
-				int posicaoY = Integer.parseInt(textoSplit[1]);
-				
-				//Pega, nas seguintes posições as cores vermelha, verde e azul
-				int red = Integer.parseInt(textoSplit[2]);
-				int green = Integer.parseInt(textoSplit[3]);
-				int blue = Integer.parseInt(textoSplit[4]);
-				
-				//Cria um pixel para a formação da imagem
-				int pixel = (red<<16) | (green<<8) | blue; 
-				
-				//Coloca, na imagem criada, um pixel de determinada cor na posição determinada
-				img.setRGB(posicaoY, posicaoX, pixel);			
-				
-				//Imprime na tela o processo de criação da imagem
-				System.out.println("x:" + posicaoX + " y: " + posicaoY + " - r:" + red + " g:" + green + " b:" + blue);				
-				
-				//Abre um arquivo para a imagem a ser criada
-				File arquivoImagem = new File("C:\\Users\\eduar\\Desktop\\Output.jpg");
-				
-				//Escreve, na imagem a ser criada, o pixel, o tipo da imagem, e o arquivo para impressão
-			    ImageIO.write(img, "jpg", arquivoImagem);
+public class LeitorTexto {
+
+	// MÃ©todo principal
+	public static void main(String[] args) throws IOException {
+
+		// Filtro para o caminho da imagem
+		final JFileChooser escolhaArquivo = new JFileChooser();
+
+		// Escolhe o nome do arquivo para conversÃ£o
+		FileNameExtensionFilter filtro = new FileNameExtensionFilter("Arquivo TXT ou DiretÃ³rio", "txt");
+
+		// Setta o filtro para o arquivo
+		escolhaArquivo.setFileFilter(filtro);
+
+		// VariÃ¡vel para escolha do arquivo
+		int resposta = escolhaArquivo.showOpenDialog(escolhaArquivo);
+
+		// Se for aprovada a verificaÃ§Ã£o do arquivo, complete o procedimento
+		if (resposta == JFileChooser.APPROVE_OPTION) {
+
+			// Armazena o arquivo para esolha
+			String nomeCompleto = escolhaArquivo.getSelectedFile().toString();
+
+			// Abre o formulÃ¡rio para escolha de diretÃ³rio
+			escolhaArquivo.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+			// Resposta para o aprovamento do diretÃ³rio
+			int respostaDiretorio = escolhaArquivo.showOpenDialog(escolhaArquivo);
+
+			// Se for aprovada a verificaÃ§Ã£o do diretorio, complete o procedimento
+			if (respostaDiretorio == JFileChooser.APPROVE_OPTION) {
+
+				// Armazena o arquivo para escolha
+				String caminhoDiretorio = escolhaArquivo.getSelectedFile().toString();
+
+				// Cria um leitor para o arquivo texto
+				FileReader arquivo = new FileReader(nomeCompleto);
+
+				// Cria um buffer para a entrada de valores do arquivo texto para o programa
+				BufferedReader texto = new BufferedReader(arquivo);
+
+				// Abre um arquivo para a imagem a ser criada
+				File arquivoImagem = new File(caminhoDiretorio + "/saidaImagem.jpg");
+
+				// Linha para a formaÃ§Ã£o da imagem atraves da leitura da mesma
+				String linha = texto.readLine();
+
+				//Teste fazer tais operaÃ§Ãµes
+				try {
+
+					// Faz a divisÃ£o do texto para saber o tamanho da imagem
+					String[] textoSplit = linha.split("%");
+
+					// Pega o comprimento da imagem
+					int comprimento = Integer.parseInt(textoSplit[0]);
+					// Pega a largura da imagem
+					int largura = Integer.parseInt(textoSplit[1]);
+
+					// Imagem em buffer atÃ© a composiÃ§Ã£o final
+					BufferedImage img = new BufferedImage(largura, comprimento, BufferedImage.TYPE_INT_RGB);
+
+					// Enquanto a linha do texto for diferente de nulo
+					while ((linha = texto.readLine()) != null) {
+						
+						//Faz a divisÃ£o da linha para uma pegar os pixels
+						textoSplit = linha.split(" ");
+
+						// Pega, no primeiro espaÃ§o da linha a posiÃ§Ã£o X
+						int posicaoX = Integer.parseInt(textoSplit[0]);
+						// Pega, no segundo espaÃ§o da linha a posiÃ§Ã£o Y
+						int posicaoY = Integer.parseInt(textoSplit[1]);
+
+						// Pega, nas seguintes posiÃ§Ãµes as cores vermelha, verde e azul
+						int red = Integer.parseInt(textoSplit[2]);
+						int green = Integer.parseInt(textoSplit[3]);
+						int blue = Integer.parseInt(textoSplit[4]);
+
+						// Cria um pixel para a formaÃ§Ã£o da imagem
+						int pixel = (red << 16) | (green << 8) | blue;
+
+						// Coloca, na imagem criada, um pixel de determinada cor na posiÃ§Ã£o determinada
+						img.setRGB(posicaoY, posicaoX, pixel);
+					}
+
+					// Escreve, na imagem a ser criada, o pixel, o tipo da imagem, e o arquivo para
+					// impressÃ£o
+					ImageIO.write(img, "jpg", arquivoImagem);
+
+					// Fecha o arquivo
+					texto.close();
+
+					// Mostra uma mensagem final
+					JOptionPane.showMessageDialog(null, "Foi terminada a conversÃ£o...");
+				} catch (FileNotFoundException ex) {
+
+					// Caso o arquivo nÃ£o exista
+					System.out.println("NÃ£o foi possÃ­vel achar o arquivo...");
+				} catch (IOException ex) {
+
+					// Caso ocorra um erro inesperado
+					System.out.println("Ocorreu um erro inesperado...");
+				}
 			}
-			
-			//Fecha o arquivo
-			texto.close();
-		} catch (FileNotFoundException ex) {
-			
-			//Caso o arquivo não exista
-			System.out.println("Não foi possível achar o arquivo...");
-		} catch (IOException ex) {
-			
-			//Caso ocorra um erro inesperado
-			System.out.println("Ocorreu um erro inesperado...");
 		}
 	}
-
 }
