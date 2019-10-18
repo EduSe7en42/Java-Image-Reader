@@ -29,7 +29,7 @@ public class LeitorImagem {
 					R = (cor & 0x00ff0000) >> 16;
 					G = (cor & 0x0000ff00) >> 8;
 					B = cor & 0x000000ff;
-					texto.println(i + " " + j + " " + R + " " + G + " " + B);
+					texto.println("n" + i + " " + j + " " + R + " " + G + " " + B);
 				}
 			}
 		

@@ -33,15 +33,34 @@ public class LeitorTexto  {
 			while ((linha = texto.readLine()) != null) {
 				textoSplit = linha.split(" ");
 				
-				posicaoX = Integer.parseInt(textoSplit[0]);
-				posicaoY = Integer.parseInt(textoSplit[1]);
-				R = Integer.parseInt(textoSplit[2]);
-				G = Integer.parseInt(textoSplit[3]);
-				B = Integer.parseInt(textoSplit[4]);
+				if (textoSplit[0] == "n") {
+					posicaoX = Integer.parseInt(textoSplit[1]);
+					posicaoY = Integer.parseInt(textoSplit[2]);
+
+					R = Integer.parseInt(textoSplit[3]);
+					G = Integer.parseInt(textoSplit[4]);
+					B = Integer.parseInt(textoSplit[5]);
 				
-				pixel = (R << 16) | (G << 8) | B;
+					pixel = (R << 16) | (G << 8) | B;
 				
-				imagem.setRGB(posicaoY, posicaoX, pixel);
+					imagem.setRGB(posicaoY, posicaoX, pixel);
+				} else if (textoSplit[0] == "c") {
+					int posicaoYf;
+
+					posicaoX = Integer.parseInt(textoSplit[1]);
+					posicaoY = Integer.parseInt(textoSplit[2]);
+					posicaoYf = Integer.parseInt(textoSplit[3]);	
+
+					R = Integer.parseInt(textoSplit[4]);
+					G = Integer.parseInt(textoSplit[5]);
+					B = Integer.parseInt(textoSplit[6]);	
+
+					pixel = (R << 16) | (G << 8) | B;
+
+					for (int contador = posicaoY; contador <= posicaoYf; contador++) {
+						imagem.setRGB(posicaoY, contador, pixel);						
+					}		
+				}
 			}
 			
 			ImageIO.write(imagem, "jpg", arquivoImagem);
